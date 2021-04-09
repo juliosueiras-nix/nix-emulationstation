@@ -1,0 +1,34 @@
+diff --git a/es-core/src/utils/FileSystemUtil.cpp b/es-core/src/utils/FileSystemUtil.cpp
+index 18cf7cd6..7381d711 100644
+--- a/es-core/src/utils/FileSystemUtil.cpp
++++ b/es-core/src/utils/FileSystemUtil.cpp
+@@ -40,11 +40,16 @@ namespace Utils
+ 		{
+ #ifdef WIN32
+ 			static std::string cfg;
++
+ 			if (cfg.empty())
+ 				cfg = Utils::FileSystem::getCanonicalPath(Utils::FileSystem::getHomePath() + "/.emulationstation");
+ 
+ 			return cfg;
+ #else
++      if(const char* env_p = std::getenv("EMULATATIONSTATION_HOME_DIR")) {
++        return env_p;
++      }
++
+ 			return "/userdata/system/configs/emulationstation"; // batocera
+ #endif
+ 		}
+@@ -54,7 +59,11 @@ namespace Utils
+ #ifdef WIN32
+ 			return Utils::FileSystem::getExePath();
+ #else
+-			return "/usr/share/emulationstation"; // batocera
++      if(const char* env_p = std::getenv("EMULATATIONSTATION_CONFIG_DIR")) {
++        return env_p;
++      }
++
++      return "/usr/share/emulationstation"; // batocera
+ #endif
+ 		}
+ 

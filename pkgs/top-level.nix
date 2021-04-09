@@ -1,0 +1,5 @@
+{ callPackage, ... }:
+
+{
+  emulationstation = callPackage ./emulationstation {};
+}

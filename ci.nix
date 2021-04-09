@@ -1,1 +1,1 @@
-(import ./default.nix).packages.${builtins.currentSystem}.emulationstation
+(import ./default.nix {}).defaultNix.packages.${builtins.currentSystem}.emulationstation

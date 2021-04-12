@@ -1,5 +1,40 @@
+diff --git a/es-core/src/platform.cpp b/es-core/src/platform.cpp
+index 054633c4..bf83c723 100644
+--- a/es-core/src/platform.cpp
++++ b/es-core/src/platform.cpp
+@@ -117,7 +117,7 @@ int runSystemCommand(const std::string& cmd_utf8, const std::string& name, Windo
+ 
+ 	return 1;
+ #else
+-	return system((cmd_utf8 + " 2> /userdata/system/logs/es_launch_stderr.log | head -300 > /userdata/system/logs/es_launch_stdout.log").c_str()); // batocera
++	return system((cmd_utf8 + " 2> $EMULATIONSTATION_CONFIG_DIR/es_launch_stderr.log | head -300 > $EMULATIONSTATION_CONFIG_DIR/es_launch_stdout.log").c_str()); // batocera
+ #endif
+ }
+ 
+diff --git a/es-core/src/resources/ResourceManager.cpp b/es-core/src/resources/ResourceManager.cpp
+index 9be4e726..92ec6e9e 100644
+--- a/es-core/src/resources/ResourceManager.cpp
++++ b/es-core/src/resources/ResourceManager.cpp
+@@ -45,6 +45,10 @@ std::vector<std::string> ResourceManager::getResourcePaths() const
+ 	
+ 	// check in exepath
+ 	paths.push_back(Utils::FileSystem::getSharedConfigPath() + "/resources"); 
++
++  if(const char* env_p = std::getenv("EMULATIONSTATION_RESOURCES_DIR")) {
++    paths.push_back(env_p); 
++  }
+ 		
+ 	// check in cwd
+ 	auto cwd = Utils::FileSystem::getCWDPath() + "/resources";	
+@@ -204,4 +208,4 @@ void ResourceManager::removeReloadable(std::weak_ptr<IReloadable> reloadable)
+ 		else
+ 			iter = mReloadables.erase(iter);
+ 	}
+-}
+\ No newline at end of file
++}
 diff --git a/es-core/src/utils/FileSystemUtil.cpp b/es-core/src/utils/FileSystemUtil.cpp
-index 18cf7cd6..7381d711 100644
+index 18cf7cd6..c571e9a5 100644
 --- a/es-core/src/utils/FileSystemUtil.cpp
 +++ b/es-core/src/utils/FileSystemUtil.cpp
 @@ -40,11 +40,16 @@ namespace Utils
@@ -12,7 +47,7 @@ index 18cf7cd6..7381d711 100644
  
  			return cfg;
  #else
-+      if(const char* env_p = std::getenv("EMULATATIONSTATION_HOME_DIR")) {
++      if(const char* env_p = std::getenv("EMULATIONSTATION_HOME_DIR")) {
 +        return env_p;
 +      }
 +
@@ -24,7 +59,7 @@ index 18cf7cd6..7381d711 100644
  			return Utils::FileSystem::getExePath();
  #else
 -			return "/usr/share/emulationstation"; // batocera
-+      if(const char* env_p = std::getenv("EMULATATIONSTATION_CONFIG_DIR")) {
++      if(const char* env_p = std::getenv("EMULATIONSTATION_CONFIG_DIR")) {
 +        return env_p;
 +      }
 +

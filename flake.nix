@@ -18,10 +18,13 @@
         devShell = pkgs.mkShell {
           NIX_PATH = "nixpkgs=${nixpkgs}";
 
-          buildInputs = [];
+          EMULATIONSTATION_CONFIG_DIR = "./config";
+          EMULATIONSTATION_HOME_DIR = "./config";
+
+          buildInputs = [ pkgs.arion self.packages.x86_64-linux.emulationstation self.packages.x86_64-linux.skyscraper];
         };
       }) // ({
-        #nixosModules = import ./modules/top-level.nix self;
+        nixosModules = import ./modules/top-level.nix self;
       });
 
 }

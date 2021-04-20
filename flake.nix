@@ -21,10 +21,41 @@
           EMULATIONSTATION_CONFIG_DIR = "./config";
           EMULATIONSTATION_HOME_DIR = "./config";
 
-          buildInputs = [ pkgs.arion self.packages.x86_64-linux.emulationstation self.packages.x86_64-linux.skyscraper];
+          buildInputs = [
+            pkgs.arion
+            self.packages.x86_64-linux.emulationstation
+            self.packages.x86_64-linux.skyscraper
+            pkgs.kubernetes-helm
+          ];
+        };
+
+        utils = {
+          buildSystem =
+            { name, fullName, path, extension, command, platform, theme }: ''
+              <system>
+              <name>${name}</name>
+              <fullname>${fullName}</fullname>
+              <path>${path}</path>
+              <extension>${extension}</extension>
+              <command>${command}</command>
+              <platform>${platform}</platform>
+              <theme>${theme}</theme>
+              </system>
+            '';
+
+          allSystemsConfig = systems:
+            pkgs.writeText "es.config" ''
+              <systemList>
+                ${builtins.toString systems}
+              </systemList>
+            '';
+
+          configDir = { theme }: pkgs.runCommand "config-dir" { preferLocalBuild = true; } ''
+            mkdir -p $out/themes
+            cp -rf ${theme.out} $out/themes/${theme.themeName}
+          '';
         };
       }) // ({
         nixosModules = import ./modules/top-level.nix self;
       });
-
 }

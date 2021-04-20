@@ -1,7 +1,25 @@
 diff --git a/es-core/src/platform.cpp b/es-core/src/platform.cpp
-index 054633c4..bf83c723 100644
+index 054633c4..8f73355a 100644
 --- a/es-core/src/platform.cpp
 +++ b/es-core/src/platform.cpp
+@@ -28,7 +28,7 @@ int runShutdownCommand()
+ #ifdef WIN32 // windows
+ 	return system("shutdown -s -t 0");
+ #else // osx / linux	
+-	return system("shutdown -h now");
++	return system("exit");
+ #endif
+ }
+ 
+@@ -37,7 +37,7 @@ int runRestartCommand()
+ #ifdef WIN32 // windows	
+ 	return system("shutdown -r -t 0");
+ #else // osx / linux	
+-	return system("shutdown -r now");
++	return system("exit");
+ #endif
+ }
+ 
 @@ -117,7 +117,7 @@ int runSystemCommand(const std::string& cmd_utf8, const std::string& name, Windo
  
  	return 1;
@@ -11,6 +29,14 @@ index 054633c4..bf83c723 100644
  #endif
  }
  
+@@ -182,7 +182,6 @@ void processQuitMode()
+ 	case QuitMode::SHUTDOWN:
+ 	case QuitMode::FAST_SHUTDOWN:
+ 		LOG(LogInfo) << "Shutting system down";
+-		touch("/tmp/shutdown.please");
+ 		runShutdownCommand();
+ 		break;
+ 	}
 diff --git a/es-core/src/resources/ResourceManager.cpp b/es-core/src/resources/ResourceManager.cpp
 index 9be4e726..92ec6e9e 100644
 --- a/es-core/src/resources/ResourceManager.cpp

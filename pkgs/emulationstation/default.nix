@@ -6,7 +6,7 @@ let
   src = fetchgit {
     url = "https://github.com/batocera-linux/batocera-emulationstation";
     rev = "61cd03136cd282a305c1aee0ac7fff34aa46819e";
-    sha256 = "csbezub17rf2QFwn3NnOCpEICXQ7hA7wSpDYevuuH1s=";
+    sha256 = "z7qZ7h9+uv+SNo01aqQDkxJX8yVgDfxJcbiwB2YuKXU=";
     deepClone = true;
   };
 
